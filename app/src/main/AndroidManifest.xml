@@ -15,11 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity
-            android:name="com.xeleb.motionviews.ui.StickerSelectActivity"
-            android:label="@string/add_sticker"
-            />
+        <activity android:name=".PreActivity"/>
 
     </application>
 

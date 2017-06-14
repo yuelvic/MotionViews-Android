@@ -89,7 +89,8 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
         findViewById(R.id.text_entity_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startTextEntityEditing();
+//                startTextEntityEditing();
+                startActivity(new Intent(MainActivity.this, PreActivity.class));
             }
         });
     }
