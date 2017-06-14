@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="team.uptech.motionviews.ui.MainActivity">
+    tools:context=".MainActivity">
 
 
-    <team.uptech.motionviews.widget.MotionView
+    <com.xeleb.motionviews.widget.MotionView
         android:id="@+id/main_motion_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
