@@ -167,6 +167,11 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
 
     private void startTextEntityEditing() {
         TextEntity textEntity = currentTextEntity();
+
+        centerText(textEntity);
+
+        motionView.invalidate();
+
         if (textEntity != null) {
             TextEditorDialogFragment fragment = TextEditorDialogFragment.getInstance(textEntity.getLayer().getText());
             fragment.show(getFragmentManager(), TextEditorDialogFragment.class.getName());
@@ -201,10 +206,7 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
                 motionView.getHeight(), fontProvider);
         motionView.addEntityAndPosition(textEntity);
 
-        // move text sticker up so that its not hidden under keyboard
-        PointF center = textEntity.absoluteCenter();
-        center.y = center.y * 0.5F;
-        textEntity.moveCenterTo(center);
+        centerText(textEntity);
 
         // redraw
         motionView.invalidate();
@@ -227,6 +229,13 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
         }
 
         return textLayer;
+    }
+
+    private void centerText(TextEntity textEntity) {
+        // move text sticker up so that its not hidden under keyboard
+        PointF center = textEntity.absoluteCenter();
+        center.y = center.y * 0.5F;
+        textEntity.moveCenterTo(center);
     }
 
     @Override
