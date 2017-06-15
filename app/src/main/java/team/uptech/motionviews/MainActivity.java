@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
             public void onClick(View view) {
 //                startTextEntityEditing();
                 startActivity(new Intent(MainActivity.this, PreActivity.class));
+                finish();
             }
         });
     }
@@ -206,13 +207,10 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
         TextEntity textEntity = new TextEntity(textLayer, motionView.getWidth(),
                 motionView.getHeight(), fontProvider);
         motionView.addEntityAndPosition(textEntity);
-
-        centerText(textEntity);
-
         // redraw
         motionView.invalidate();
 
-        startTextEntityEditing();
+//        startTextEntityEditing();
     }
 
     private TextLayer createTextLayer() {

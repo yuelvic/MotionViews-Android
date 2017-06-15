@@ -2,13 +2,16 @@ package team.uptech.motionviews;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.xeleb.motionviews.utils.FontProvider;
 import com.xeleb.motionviews.viewmodel.Font;
+import com.xeleb.motionviews.viewmodel.Layer;
 import com.xeleb.motionviews.viewmodel.TextLayer;
 import com.xeleb.motionviews.widget.MotionView;
+import com.xeleb.motionviews.widget.entity.MotionEntity;
 import com.xeleb.motionviews.widget.entity.TextEntity;
 
 /**
@@ -29,32 +32,65 @@ public class PreActivity extends AppCompatActivity {
 
     private void initialize() {
         motionView = (MotionView) findViewById(R.id.motion_view);
+        motionView.setMotionViewCallback(motionViewCallback);
         fontProvider = new FontProvider(getResources());
 
-        for (int i = 0; i < 3; i++) addTextEntity(i);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (int i = 0; i < 5; i++) addTextEntity();
+                        }
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
-    private void addTextEntity(int i) {
+    private void addTextEntity() {
+        TextLayer textLayer = createLayer();
         TextEntity textEntity = new TextEntity(
-                createLayer(i), motionView.getWidth(), motionView.getHeight(), fontProvider
+                textLayer, motionView.getWidth(), motionView.getHeight(), fontProvider
         );
         motionView.addEntityAndPosition(textEntity);
         motionView.invalidate();
     }
 
-    private TextLayer createLayer(int i) {
+    private TextLayer createLayer() {
+        TextLayer textLayer = new TextLayer();
         Font font = new Font();
-        font.setColor(i % 2 == 0 ? Color.RED : Color.BLACK);
-        font.setSize(i % 2 == 0 ? 0.08f : 0.04f);
+
+        font.setColor(System.currentTimeMillis() % 2 == 0 ? Color.RED : Color.BLACK);
+        font.setSize(TextLayer.Limits.INITIAL_FONT_SIZE);
         font.setTypeface(fontProvider.getDefaultFontName());
 
-        TextLayer textLayer = new TextLayer();
-        textLayer.setText("Sample label");
         textLayer.setFont(font);
-        textLayer.setRotationInDegrees(i % 2 == 0 ? 0.45f : 0f);
-        textLayer.setScale(i % 2 == 0 ? 0.5f : 0.8f);
+        textLayer.setRotationInDegrees(System.currentTimeMillis() % 2 == 0 ? 35f : 300f);
+        textLayer.setScale(System.currentTimeMillis() % 2 == 0 ? 1f : 2f);
+
+        if (BuildConfig.DEBUG) {
+            textLayer.setText("Text overlay");
+        }
 
         return textLayer;
     }
+
+    MotionView.MotionViewCallback motionViewCallback = new MotionView.MotionViewCallback() {
+        @Override
+        public void onEntitySelected(@Nullable MotionEntity entity) {
+
+        }
+
+        @Override
+        public void onEntityDoubleTap(@NonNull MotionEntity entity) {
+
+        }
+    };
 
 }
