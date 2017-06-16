@@ -1,12 +1,9 @@
 package com.xeleb.motionviews.viewmodel;
 
-public class TextLayer extends Layer {
+public class TextLayer<T extends Overlay> extends Layer<T> {
 
     private String text;
     private Font font;
-
-    public TextLayer() {
-    }
 
     @Override
     protected void reset() {
@@ -44,6 +41,11 @@ public class TextLayer extends Layer {
 
     public void setFont(Font font) {
         this.font = font;
+    }
+
+    @Override
+    public void setOverlay(T overlay) {
+        super.setOverlay(overlay);
     }
 
     public interface Limits {

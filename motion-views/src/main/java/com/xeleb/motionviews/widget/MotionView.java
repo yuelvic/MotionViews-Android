@@ -2,6 +2,7 @@ package com.xeleb.motionviews.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -63,6 +64,9 @@ public class MotionView  extends FrameLayout {
     private MoveGestureDetector moveGestureDetector;
     private GestureDetectorCompat gestureDetectorCompat;
 
+    // attribute set
+    private boolean isEditable = true;
+
     // constructors
     public MotionView(Context context) {
         super(context);
@@ -71,11 +75,13 @@ public class MotionView  extends FrameLayout {
 
     public MotionView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setAttributes(attrs);
         init(context);
     }
 
     public MotionView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setAttributes(attrs);
         init(context);
     }
 
@@ -83,7 +89,15 @@ public class MotionView  extends FrameLayout {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public MotionView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        setAttributes(attrs);
         init(context);
+    }
+
+    // set attributes
+    private void setAttributes(AttributeSet attrs) {
+        TypedArray attributes = getContext().obtainStyledAttributes(attrs, R.styleable.MotionView);
+        this.isEditable = attributes.getBoolean(R.styleable.MotionView_is_editable, true);
+        attributes.recycle();
     }
 
     private void init(@NonNull Context context) {
@@ -105,6 +119,7 @@ public class MotionView  extends FrameLayout {
         updateUI();
     }
 
+    @Nullable
     public MotionEntity getSelectedEntity() {
         return selectedEntity;
     }
@@ -220,10 +235,10 @@ public class MotionView  extends FrameLayout {
     }
 
     private void selectEntity(@Nullable MotionEntity entity, boolean updateCallback) {
-        if (selectedEntity != null) {
+        if (selectedEntity != null && isEditable) {
             selectedEntity.setIsSelected(false);
         }
-        if (entity != null) {
+        if (entity != null && isEditable) {
             entity.setIsSelected(true);
         }
         selectedEntity = entity;
@@ -322,10 +337,12 @@ public class MotionView  extends FrameLayout {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (scaleGestureDetector != null) {
-                scaleGestureDetector.onTouchEvent(event);
-                rotateGestureDetector.onTouchEvent(event);
-                moveGestureDetector.onTouchEvent(event);
                 gestureDetectorCompat.onTouchEvent(event);
+                if (isEditable) {
+                    scaleGestureDetector.onTouchEvent(event);
+                    rotateGestureDetector.onTouchEvent(event);
+                    moveGestureDetector.onTouchEvent(event);
+                }
             }
             return true;
         }

@@ -2,7 +2,7 @@ package com.xeleb.motionviews.viewmodel;
 
 import android.support.annotation.FloatRange;
 
-public class Layer {
+public class Layer<T extends Overlay> {
 
     /**
      * rotation relative to the layer center, in degrees
@@ -23,6 +23,11 @@ public class Layer {
      * is layer flipped horizontally (by X-coordinate)
      */
     private boolean isFlipped;
+
+    /**
+     * metadata
+     */
+    private T overlay;
 
     public Layer() {
         reset();
@@ -107,6 +112,14 @@ public class Layer {
 
     public void setFlipped(boolean flipped) {
         isFlipped = flipped;
+    }
+
+    public T getOverlay() {
+        return overlay;
+    }
+
+    public void setOverlay(T overlay) {
+        this.overlay = overlay;
     }
 
     interface Limits {
