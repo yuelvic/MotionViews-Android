@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="12dp"
     android:background="@color/transparent"
     android:clickable="true"
     android:fitsSystemWindows="true">
@@ -20,6 +21,13 @@
         android:inputType="textMultiLine|textNoSuggestions|textVisiblePassword"
         android:textSize="1sp"
         tools:ignore="SmallSp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:tint="@android:color/white"
+        android:src="@drawable/ic_color"/>
 
 </RelativeLayout>
 

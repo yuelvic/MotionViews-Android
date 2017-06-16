@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Typeface;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -92,7 +93,7 @@ public class TextEntity extends MotionEntity {
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setTextSize(textLayer.getFont().getSize() * canvasWidth);
         textPaint.setColor(textLayer.getFont().getColor());
-        textPaint.setTypeface(fontProvider.getTypeface(textLayer.getFont().getTypeface()));
+        textPaint.setTypeface(Typeface.create(fontProvider.getTypeface(textLayer.getFont().getTypeface()), Typeface.BOLD));
 
         // drawing text guide : http://ivankocijan.xyz/android-drawing-multiline-text-on-canvas/
         // Static layout which will be drawn on canvas

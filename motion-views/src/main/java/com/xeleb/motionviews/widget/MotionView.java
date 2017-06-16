@@ -323,6 +323,21 @@ public class MotionView  extends FrameLayout {
         }
     }
 
+    public void restoreEntities(List<MotionEntity> entities) {
+        Log.d("Entity size", entities.size() + "");
+        this.entities.clear();
+        this.entities.addAll(entities);
+        invalidate();
+    }
+
+    public void hideNonSelectedEntities() {
+        List<MotionEntity> retained = new ArrayList<>();
+        retained.add(selectedEntity);
+        entities.clear();
+        entities.addAll(retained);
+        invalidate();
+    }
+
     // memory
     public void release() {
         for (MotionEntity entity : entities) {

@@ -26,6 +26,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.1'
     // color picker
     compile 'com.github.QuadFlask:colorpicker:0.0.13'
+    // video player
+    compile 'com.devbrackets.android:exomedia:4.0.2'
     // test
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
