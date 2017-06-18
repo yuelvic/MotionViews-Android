@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -18,8 +19,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.xeleb.motionviews.R;
+import com.xeleb.motionviews.widget.entity.TextEntity;
+
+import static com.xeleb.motionviews.R.attr.initialColor;
 
 /**
  * Transparent Dialog Fragment, with no title and no background
@@ -36,6 +44,7 @@ public class TextEditorDialogFragment extends DialogFragment {
     public static final String ARG_TEXT = "editor_text_arg";
 
     protected EditText editText;
+    protected ImageView ivColor;
 
     private OnTextLayerCallback callback;
 
@@ -82,6 +91,32 @@ public class TextEditorDialogFragment extends DialogFragment {
         if (args != null) {
             text = args.getString(ARG_TEXT);
         }
+
+        ivColor = (ImageView) view.findViewById(R.id.iv_color);
+        ivColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ColorPickerDialogBuilder
+                        .with(getActivity())
+                        .setTitle("Select a color")
+                        .initialColor(initialColor)
+                        .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
+                        .density(8) // magic number
+                        .setPositiveButton("OK", new ColorPickerClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                                callback.colorChanged(selectedColor);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .build()
+                        .show();
+            }
+        });
 
         editText = (EditText) view.findViewById(R.id.edit_text_view);
 
@@ -202,5 +237,6 @@ public class TextEditorDialogFragment extends DialogFragment {
      */
     public interface OnTextLayerCallback {
         void textChanged(@NonNull String text);
+        void colorChanged(int color);
     }
 }

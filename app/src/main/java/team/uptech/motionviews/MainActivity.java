@@ -254,4 +254,9 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
             }
         }
     }
+
+    @Override
+    public void colorChanged(int color) {
+
+    }
 }

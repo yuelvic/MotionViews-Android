@@ -58,6 +58,10 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_pre);
+
+        if (getActionBar() != null)
+            getActionBar().hide();
+
         initialize();
     }
 
@@ -237,6 +241,16 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
                 textEntity.updateEntity();
                 motionView.invalidate();
             }
+        }
+    }
+
+    @Override
+    public void colorChanged(int color) {
+        TextEntity textEntity = currentTextEntity();
+        if (textEntity != null) {
+            textEntity.getLayer().getFont().setColor(color);
+            textEntity.updateEntity();
+            motionView.invalidate();
         }
     }
 }
