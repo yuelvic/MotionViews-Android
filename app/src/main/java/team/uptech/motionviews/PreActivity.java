@@ -178,7 +178,8 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
         motionView.setBackgroundColor(ContextCompat.getColor(this, R.color.transparent_dark));
 //        motionView.hideNonSelectedEntities();
 
-        TextEditorDialogFragment fragment = TextEditorDialogFragment.getInstance(textEntity.getLayer().getText());
+        TextEditorDialogFragment fragment = TextEditorDialogFragment
+                .getInstance(textEntity.getLayer().getText(), textEntity.getLayer().getFont().getColor());
         fragment.show(getFragmentManager(), TextEditorDialogFragment.class.getName());
     }
 
@@ -241,6 +242,17 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
                 textEntity.updateEntity();
                 motionView.invalidate();
             }
+        }
+    }
+
+    @Override
+    public void textSizeChanged(boolean increase) {
+        TextEntity textEntity = currentTextEntity();
+        if (textEntity != null) {
+            if (increase) textEntity.getLayer().getFont().increaseSize(TextLayer.Limits.FONT_SIZE_STEP);
+            else textEntity.getLayer().getFont().decreaseSize(TextLayer.Limits.FONT_SIZE_STEP);
+            textEntity.updateEntity();
+            motionView.invalidate();
         }
     }
 

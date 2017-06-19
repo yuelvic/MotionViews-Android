@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="12dp"
-    android:background="@color/transparent"
     android:clickable="true"
     android:fitsSystemWindows="true">
 
@@ -24,11 +23,30 @@
 
     <ImageView
         android:id="@+id/iv_color"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:padding="@dimen/icon_padding"
         android:layout_alignParentEnd="true"
         android:tint="@android:color/white"
         android:src="@drawable/ic_color"/>
+
+    <ImageView
+        android:id="@+id/iv_font_inc"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:padding="@dimen/icon_padding"
+        android:layout_toStartOf="@id/iv_color"
+        android:tint="@android:color/white"
+        android:src="@drawable/ic_font_inc"/>
+
+    <ImageView
+        android:id="@+id/iv_font_dec"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:padding="@dimen/icon_padding"
+        android:layout_toStartOf="@id/iv_font_inc"
+        android:tint="@android:color/white"
+        android:src="@drawable/ic_font_dec"/>
 
 </RelativeLayout>
 

@@ -175,7 +175,8 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
         motionView.invalidate();
 
         if (textEntity != null) {
-            TextEditorDialogFragment fragment = TextEditorDialogFragment.getInstance(textEntity.getLayer().getText());
+            TextEditorDialogFragment fragment = TextEditorDialogFragment
+                    .getInstance(textEntity.getLayer().getText(), textEntity.getLayer().getFont().getColor());
             fragment.show(getFragmentManager(), TextEditorDialogFragment.class.getName());
         }
     }
@@ -253,6 +254,11 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
                 motionView.invalidate();
             }
         }
+    }
+
+    @Override
+    public void textSizeChanged(boolean increase) {
+
     }
 
     @Override

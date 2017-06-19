@@ -42,26 +42,30 @@ import static com.xeleb.motionviews.R.attr.initialColor;
 public class TextEditorDialogFragment extends DialogFragment {
 
     public static final String ARG_TEXT = "editor_text_arg";
+    public static final String ARG_COLOR = "editor_color_arg";
 
     protected EditText editText;
     protected ImageView ivColor;
+    protected ImageView ivFontInc;
+    protected ImageView ivFontDec;
 
     private OnTextLayerCallback callback;
 
     /**
      * deprecated
-     * use {@link TextEditorDialogFragment#getInstance(String)}
+     * use {@link TextEditorDialogFragment#getInstance(String, int)}
      */
     @Deprecated
     public TextEditorDialogFragment() {
         // empty, use getInstance
     }
 
-    public static TextEditorDialogFragment getInstance(String textValue) {
+    public static TextEditorDialogFragment getInstance(String textValue, int textColor) {
         @SuppressWarnings("deprecation")
         TextEditorDialogFragment fragment = new TextEditorDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TEXT, textValue);
+        args.putInt(ARG_COLOR, textColor);
         fragment.setArguments(args);
         return fragment;
     }
@@ -86,11 +90,28 @@ public class TextEditorDialogFragment extends DialogFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Bundle args = getArguments();
-        String text = "";
-        if (args != null) {
-            text = args.getString(ARG_TEXT);
-        }
+        final Bundle args = getArguments();
+        String text;
+
+        if (args == null) return;
+
+        text = args.getString(ARG_TEXT);
+
+        ivFontInc = (ImageView) view.findViewById(R.id.iv_font_inc);
+        ivFontInc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.textSizeChanged(true);
+            }
+        });
+
+        ivFontDec = (ImageView) view.findViewById(R.id.iv_font_dec);
+        ivFontDec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.textSizeChanged(false);
+            }
+        });
 
         ivColor = (ImageView) view.findViewById(R.id.iv_color);
         ivColor.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +120,7 @@ public class TextEditorDialogFragment extends DialogFragment {
                 ColorPickerDialogBuilder
                         .with(getActivity())
                         .setTitle("Select a color")
-                        .initialColor(initialColor)
+                        .initialColor(args.getInt(ARG_COLOR))
                         .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
                         .density(8) // magic number
                         .setPositiveButton("OK", new ColorPickerClickListener() {
@@ -237,6 +258,7 @@ public class TextEditorDialogFragment extends DialogFragment {
      */
     public interface OnTextLayerCallback {
         void textChanged(@NonNull String text);
+        void textSizeChanged(boolean increase);
         void colorChanged(int color);
     }
 }
