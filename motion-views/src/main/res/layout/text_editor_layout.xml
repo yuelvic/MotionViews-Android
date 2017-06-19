@@ -22,6 +22,15 @@
         tools:ignore="SmallSp"/>
 
     <ImageView
+        android:id="@+id/iv_border"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:padding="@dimen/icon_padding"
+        android:layout_centerHorizontal="true"
+        android:tint="@android:color/white"
+        android:src="@drawable/ic_border"/>
+
+    <ImageView
         android:id="@+id/iv_color"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"

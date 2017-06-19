@@ -9,8 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.devbrackets.android.exomedia.listener.OnCompletionListener;
 import com.devbrackets.android.exomedia.listener.OnPreparedListener;
@@ -25,7 +27,6 @@ import com.xeleb.motionviews.widget.entity.TextEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import team.uptech.motionviews.models.User;
 
@@ -35,11 +36,10 @@ import team.uptech.motionviews.models.User;
 
 public class PreActivity extends AppCompatActivity implements TextEditorDialogFragment.OnTextLayerCallback {
 
+    private ImageView ivAdd;
     private VideoView videoView;
     private MotionView motionView;
     private FontProvider fontProvider;
-
-    private Random random;
 
     // entity saved state
     private List<MotionEntity> entities = new ArrayList<>();
@@ -48,8 +48,6 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
     private float savedRotation;
     private float savedX;
     private float savedY;
-
-    private static final String[] URLS = {"https://www.youtube.com/", "https://www.google.com.ph/", "https://www.facebook.com/"};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +71,14 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
     }
 
     private void initialize() {
+        ivAdd = (ImageView) findViewById(R.id.iv_add);
+        ivAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editTextEntity(addTextEntity());
+            }
+        });
+
         videoView = (VideoView) findViewById(R.id.video_view);
         videoView.setOnPreparedListener(new OnPreparedListener() {
             @Override
@@ -93,68 +99,34 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
         motionView = (MotionView) findViewById(R.id.motion_view);
         motionView.setMotionViewCallback(motionViewCallback);
         fontProvider = new FontProvider(getResources());
-
-        random = new Random();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (int i = 0; i < 3; i++) addTextEntity();
-                        }
-                    });
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
-    private void addTextEntity() {
+    private TextEntity addTextEntity() {
         TextLayer textLayer = createLayer();
         TextEntity textEntity = new TextEntity(
                 textLayer, motionView.getWidth(), motionView.getHeight(), fontProvider
         );
-        motionView.addEntity(textEntity);
+        motionView.addEntityAndPosition(textEntity);
         motionView.invalidate();
+        return textEntity;
     }
 
     private TextLayer createLayer() {
         TextLayer<User> textLayer = new TextLayer<>();
         Font font = new Font();
 
-        font.setColor(Color.rgb(getRandomColorValue(), getRandomColorValue(), getRandomColorValue()));
         font.setSize(TextLayer.Limits.INITIAL_FONT_SIZE);
+        font.setColor(Color.WHITE);
         font.setTypeface(fontProvider.getDefaultFontName());
 
         textLayer.setFont(font);
         textLayer.setScale(1f);
-        textLayer.setRotationInDegrees((float) random.nextInt(360 + 1));
-        textLayer.setX(random.nextFloat() * (0.45f - -0.45f) + -0.45f);
-        textLayer.setY(random.nextFloat() * (0.85f - 0.1f) + 0.1f);
-
-        String url = URLS[random.nextInt(2)];
-
-        User user = new User();
-        user.setUserID(13);
-        user.setUsername("John Doe");
-        user.setUrl(url);
-
-        textLayer.setOverlay(user);
 
         if (BuildConfig.DEBUG) {
-            textLayer.setText(url);
+            textLayer.setText("Overlay");
         }
 
         return textLayer;
-    }
-
-    private int getRandomColorValue() {
-        return random.nextInt(255 + 1);
     }
 
     @Nullable
@@ -178,9 +150,7 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
         motionView.setBackgroundColor(ContextCompat.getColor(this, R.color.transparent_dark));
 //        motionView.hideNonSelectedEntities();
 
-        TextEditorDialogFragment fragment = TextEditorDialogFragment
-                .getInstance(textEntity.getLayer().getText(), textEntity.getLayer().getFont().getColor());
-        fragment.show(getFragmentManager(), TextEditorDialogFragment.class.getName());
+        showTextEditor();
     }
 
     private void restoreEntity() {
@@ -211,6 +181,12 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
         return displayMetrics;
     }
 
+    private void showTextEditor() {
+        TextEditorDialogFragment fragment = TextEditorDialogFragment
+                .getInstance(textEntity.getLayer().getText(), textEntity.getLayer().getFont().getColor());
+        fragment.show(getFragmentManager(), TextEditorDialogFragment.class.getName());
+    }
+
     MotionView.MotionViewCallback motionViewCallback = new MotionView.MotionViewCallback() {
         @Override
         public void onEntitySelected(@Nullable MotionEntity entity) {
@@ -231,6 +207,16 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
             editTextEntity((TextEntity) entity);
         }
     };
+
+    @Override
+    public void textBorderChanged() {
+        TextEntity textEntity = currentTextEntity();
+        if (textEntity != null) {
+            textEntity.setBorder(!textEntity.hasBorder());
+            textEntity.updateEntity();
+            motionView.invalidate();
+        }
+    }
 
     @Override
     public void textChanged(@NonNull String text) {
@@ -257,7 +243,7 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
     }
 
     @Override
-    public void colorChanged(int color) {
+    public void textColorChanged(int color) {
         TextEntity textEntity = currentTextEntity();
         if (textEntity != null) {
             textEntity.getLayer().getFont().setColor(color);

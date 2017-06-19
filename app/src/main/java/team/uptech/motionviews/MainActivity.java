@@ -244,6 +244,11 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
     }
 
     @Override
+    public void textBorderChanged() {
+
+    }
+
+    @Override
     public void textChanged(@NonNull String text) {
         TextEntity textEntity = currentTextEntity();
         if (textEntity != null) {
@@ -262,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
     }
 
     @Override
-    public void colorChanged(int color) {
+    public void textColorChanged(int color) {
 
     }
 }

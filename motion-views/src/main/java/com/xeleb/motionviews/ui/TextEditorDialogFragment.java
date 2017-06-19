@@ -25,9 +25,6 @@ import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.xeleb.motionviews.R;
-import com.xeleb.motionviews.widget.entity.TextEntity;
-
-import static com.xeleb.motionviews.R.attr.initialColor;
 
 /**
  * Transparent Dialog Fragment, with no title and no background
@@ -45,6 +42,7 @@ public class TextEditorDialogFragment extends DialogFragment {
     public static final String ARG_COLOR = "editor_color_arg";
 
     protected EditText editText;
+    protected ImageView ivBorder;
     protected ImageView ivColor;
     protected ImageView ivFontInc;
     protected ImageView ivFontDec;
@@ -97,6 +95,14 @@ public class TextEditorDialogFragment extends DialogFragment {
 
         text = args.getString(ARG_TEXT);
 
+        ivBorder = (ImageView) view.findViewById(R.id.iv_border);
+        ivBorder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.textBorderChanged();
+            }
+        });
+
         ivFontInc = (ImageView) view.findViewById(R.id.iv_font_inc);
         ivFontInc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +132,7 @@ public class TextEditorDialogFragment extends DialogFragment {
                         .setPositiveButton("OK", new ColorPickerClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
-                                callback.colorChanged(selectedColor);
+                                callback.textColorChanged(selectedColor);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -257,8 +263,9 @@ public class TextEditorDialogFragment extends DialogFragment {
      * {@link TextEditorDialogFragment.OnTextLayerCallback#textChanged(String)}
      */
     public interface OnTextLayerCallback {
+        void textBorderChanged();
         void textChanged(@NonNull String text);
         void textSizeChanged(boolean increase);
-        void colorChanged(int color);
+        void textColorChanged(int color);
     }
 }

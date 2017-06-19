@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
@@ -22,6 +24,9 @@ public class TextEntity extends MotionEntity {
     private final FontProvider fontProvider;
     @Nullable
     private Bitmap bitmap;
+
+    // border
+    private boolean border = false;
 
     public TextEntity(@NonNull TextLayer textLayer,
                       @IntRange(from = 1) int canvasWidth,
@@ -125,6 +130,18 @@ public class TextEntity extends MotionEntity {
         }
 
         Canvas canvas = new Canvas(bmp);
+
+        if (border) {
+            Paint paint = new Paint();
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(
+                    getLayer().getFont().getColor() == Color.WHITE
+                    ? Color.parseColor("#ffb74d") : getLayer().getFont().getColor()
+            );
+            canvas.drawRect(new Rect(0, 0, canvasWidth, canvasHeight), paint);
+            textPaint.setColor(Color.WHITE);
+        }
+
         canvas.save();
 
         // move text to center if bitmap is bigger that text
@@ -140,6 +157,14 @@ public class TextEntity extends MotionEntity {
         canvas.restore();
 
         return bmp;
+    }
+
+    public void setBorder(boolean border) {
+        this.border = border;
+    }
+
+    public boolean hasBorder() {
+        return border;
     }
 
     @Override
