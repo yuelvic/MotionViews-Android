@@ -76,6 +76,7 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
             @Override
             public void onClick(View view) {
                 editTextEntity(addTextEntity());
+                ivAdd.setVisibility(View.GONE);
             }
         });
 
@@ -197,6 +198,7 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
 //            }
             if (entity == null) {
                 restoreEntity();
+                ivAdd.setVisibility(View.VISIBLE);
                 motionView.setBackgroundColor(Color.TRANSPARENT);
                 return;
             }
@@ -205,6 +207,7 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
         @Override
         public void onEntityDoubleTap(@NonNull MotionEntity entity) {
             editTextEntity((TextEntity) entity);
+            ivAdd.setVisibility(View.GONE);
         }
     };
 
