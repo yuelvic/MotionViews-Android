@@ -1,5 +1,5 @@
 # Text Stickers for Android
-based on [uptechteam's](https://github.com/uptechteam)[MotionViews-Android](https://github.com/uptechteam/MotionViews-Android)
+based on [uptechteam's](https://github.com/uptechteam) [MotionViews-Android](https://github.com/uptechteam/MotionViews-Android)
 
 ## Added Features
 * Text background
