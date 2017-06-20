@@ -36,6 +36,7 @@ import team.uptech.motionviews.models.User;
 
 public class PreActivity extends AppCompatActivity implements TextEditorDialogFragment.OnTextLayerCallback {
 
+    private ImageView ivRemove;
     private ImageView ivAdd;
     private VideoView videoView;
     private MotionView motionView;
@@ -71,6 +72,16 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
     }
 
     private void initialize() {
+        ivRemove = (ImageView) findViewById(R.id.iv_remove);
+        ivRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                motionView.deletedSelectedEntity();
+                ivRemove.setVisibility(View.GONE);
+                ivAdd.setVisibility(View.VISIBLE);
+            }
+        });
+
         ivAdd = (ImageView) findViewById(R.id.iv_add);
         ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,6 +197,8 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
         TextEditorDialogFragment fragment = TextEditorDialogFragment
                 .getInstance(textEntity.getLayer().getText(), textEntity.getLayer().getFont().getColor());
         fragment.show(getFragmentManager(), TextEditorDialogFragment.class.getName());
+
+        ivRemove.setVisibility(View.GONE);
     }
 
     MotionView.MotionViewCallback motionViewCallback = new MotionView.MotionViewCallback() {
@@ -196,9 +209,10 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
 //                i.setData(Uri.parse(((User) ((TextEntity) entity).getLayer().getOverlay()).getUrl()));
 //                startActivity(i);
 //            }
+            ivAdd.setVisibility(entity == null ? View.VISIBLE : View.GONE);
+            ivRemove.setVisibility(entity == null ? View.GONE : View.VISIBLE);
             if (entity == null) {
                 restoreEntity();
-                ivAdd.setVisibility(View.VISIBLE);
                 motionView.setBackgroundColor(Color.TRANSPARENT);
                 return;
             }
