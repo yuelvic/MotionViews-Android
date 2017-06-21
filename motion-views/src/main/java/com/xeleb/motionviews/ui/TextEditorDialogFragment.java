@@ -69,27 +69,27 @@ public class TextEditorDialogFragment extends DialogFragment {
         return fragment;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof OnTextLayerCallback) {
-            this.callback = (OnTextLayerCallback) activity;
-        } else {
-            throw new IllegalStateException(activity.getClass().getName()
-                    + " must implement " + OnTextLayerCallback.class.getName());
-        }
-    }
-
-    @Override
-    public void onAttachFragment(Fragment childFragment) {
-        super.onAttachFragment(childFragment);
-        if (childFragment.getActivity() instanceof OnTextLayerCallback) {
-            this.callback = (OnTextLayerCallback) childFragment.getActivity();
-        } else {
-            throw new IllegalStateException(childFragment.getActivity().getClass().getName()
-                    + " must implement " + OnTextLayerCallback.class.getName());
-        }
-    }
+//    @Override
+//    public void onAttach(Activity activity) {
+//        super.onAttach(activity);
+//        if (activity instanceof OnTextLayerCallback) {
+//            this.callback = (OnTextLayerCallback) activity;
+//        } else {
+//            throw new IllegalStateException(activity.getClass().getName()
+//                    + " must implement " + OnTextLayerCallback.class.getName());
+//        }
+//    }
+//
+//    @Override
+//    public void onAttachFragment(Fragment childFragment) {
+//        super.onAttachFragment(childFragment);
+//        if (childFragment.getActivity() instanceof OnTextLayerCallback) {
+//            this.callback = (OnTextLayerCallback) childFragment.getActivity();
+//        } else {
+//            throw new IllegalStateException(childFragment.getActivity().getClass().getName()
+//                    + " must implement " + OnTextLayerCallback.class.getName());
+//        }
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
