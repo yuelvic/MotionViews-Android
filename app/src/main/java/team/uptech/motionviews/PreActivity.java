@@ -196,7 +196,7 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
     private void showTextEditor() {
         TextEditorDialogFragment fragment = TextEditorDialogFragment
                 .getInstance(textEntity.getLayer().getText(), textEntity.getLayer().getFont().getColor());
-        fragment.show(getFragmentManager(), TextEditorDialogFragment.class.getName());
+        fragment.show(getSupportFragmentManager(), TextEditorDialogFragment.class.getName());
 
         ivRemove.setVisibility(View.GONE);
     }
