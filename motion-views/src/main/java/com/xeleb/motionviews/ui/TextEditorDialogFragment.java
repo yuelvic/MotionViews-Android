@@ -80,16 +80,17 @@ public class TextEditorDialogFragment extends DialogFragment {
 //        }
 //    }
 //
-    @Override
-    public void onAttachFragment(Fragment childFragment) {
-        super.onAttachFragment(childFragment);
-        if (childFragment instanceof OnTextLayerCallback) {
-            this.callback = (OnTextLayerCallback) childFragment;
-        } else {
-            throw new IllegalStateException(childFragment.getClass().getName()
-                    + " must implement " + OnTextLayerCallback.class.getName());
-        }
-    }
+
+//    @Override
+//    public void onAttachFragment(Fragment childFragment) {
+//        super.onAttachFragment(childFragment);
+//        if (childFragment instanceof OnTextLayerCallback) {
+//            this.callback = (OnTextLayerCallback) childFragment;
+//        } else {
+//            throw new IllegalStateException(childFragment.getClass().getName()
+//                    + " must implement " + OnTextLayerCallback.class.getName());
+//        }
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -199,6 +200,10 @@ public class TextEditorDialogFragment extends DialogFragment {
                 }
             }
         });
+    }
+
+    public void setCallback(OnTextLayerCallback callback) {
+        this.callback = callback;
     }
 
     @Override

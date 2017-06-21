@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
         if (textEntity != null) {
             TextEditorDialogFragment fragment = TextEditorDialogFragment
                     .getInstance(textEntity.getLayer().getText(), textEntity.getLayer().getFont().getColor());
-            fragment.show(getFragmentManager(), TextEditorDialogFragment.class.getName());
+            fragment.show(getSupportFragmentManager(), TextEditorDialogFragment.class.getName());
         }
     }
 
