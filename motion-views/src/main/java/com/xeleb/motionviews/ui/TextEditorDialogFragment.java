@@ -3,6 +3,7 @@ package com.xeleb.motionviews.ui;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -75,6 +76,17 @@ public class TextEditorDialogFragment extends DialogFragment {
             this.callback = (OnTextLayerCallback) activity;
         } else {
             throw new IllegalStateException(activity.getClass().getName()
+                    + " must implement " + OnTextLayerCallback.class.getName());
+        }
+    }
+
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+        if (childFragment.getActivity() instanceof OnTextLayerCallback) {
+            this.callback = (OnTextLayerCallback) childFragment.getActivity();
+        } else {
+            throw new IllegalStateException(childFragment.getActivity().getClass().getName()
                     + " must implement " + OnTextLayerCallback.class.getName());
         }
     }

@@ -28,7 +28,9 @@ import java.util.List;
 import com.xeleb.motionviews.R;
 import com.xeleb.motionviews.gestures.MoveGestureDetector;
 import com.xeleb.motionviews.gestures.RotateGestureDetector;
+import com.xeleb.motionviews.viewmodel.TextLayer;
 import com.xeleb.motionviews.widget.entity.MotionEntity;
+import com.xeleb.motionviews.widget.entity.TextEntity;
 
 /**
  * Created on 9/29/16.
@@ -390,6 +392,7 @@ public class MotionView  extends FrameLayout {
             if (selectedEntity != null) {
                 float scaleFactorDiff = detector.getScaleFactor();
                 selectedEntity.getLayer().postScale(scaleFactorDiff - 1.0F);
+
                 updateUI();
             }
             return true;
