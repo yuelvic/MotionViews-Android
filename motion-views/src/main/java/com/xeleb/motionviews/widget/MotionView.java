@@ -345,6 +345,8 @@ public class MotionView  extends FrameLayout {
         for (MotionEntity entity : entities) {
             entity.release();
         }
+        entities.clear();
+        invalidate();
     }
 
     // gesture detectors

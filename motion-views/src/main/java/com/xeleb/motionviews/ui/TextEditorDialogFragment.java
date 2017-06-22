@@ -1,6 +1,5 @@
 package com.xeleb.motionviews.ui;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
@@ -68,29 +66,6 @@ public class TextEditorDialogFragment extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-//    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        if (activity instanceof OnTextLayerCallback) {
-//            this.callback = (OnTextLayerCallback) activity;
-//        } else {
-//            throw new IllegalStateException(activity.getClass().getName()
-//                    + " must implement " + OnTextLayerCallback.class.getName());
-//        }
-//    }
-//
-
-//    @Override
-//    public void onAttachFragment(Fragment childFragment) {
-//        super.onAttachFragment(childFragment);
-//        if (childFragment instanceof OnTextLayerCallback) {
-//            this.callback = (OnTextLayerCallback) childFragment;
-//        } else {
-//            throw new IllegalStateException(childFragment.getClass().getName()
-//                    + " must implement " + OnTextLayerCallback.class.getName());
-//        }
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
