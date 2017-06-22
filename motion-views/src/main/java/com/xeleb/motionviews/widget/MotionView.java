@@ -373,7 +373,7 @@ public class MotionView  extends FrameLayout {
             if (motionViewCallback != null && selectedEntity != null) {
                 motionViewCallback.onEntityDoubleTap(selectedEntity);
             }
-            return true;
+            return false;
         }
 
         @Override
@@ -384,7 +384,7 @@ public class MotionView  extends FrameLayout {
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             updateSelectionOnTap(e);
-            return true;
+            return false;
         }
     }
 
