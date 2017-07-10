@@ -40,6 +40,9 @@ public class MotionView  extends FrameLayout {
 
     private static final String TAG = MotionView.class.getSimpleName();
 
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
     public interface Constants {
         float SELECTED_LAYER_ALPHA = 0.15F;
     }
@@ -47,6 +50,10 @@ public class MotionView  extends FrameLayout {
     public interface MotionViewCallback {
         void onEntitySelected(@Nullable MotionEntity entity);
         void onEntityDoubleTap(@NonNull MotionEntity entity);
+        void onSwipeLeft();
+        void onSwipeRight();
+        void onSwipeUp();
+        void onSwipeDown();
     }
 
     // layers
@@ -276,6 +283,7 @@ public class MotionView  extends FrameLayout {
 
     private void updateOnLongPress(MotionEvent e) {
         // if layer is currently selected and point inside layer - move it to front
+        if (!isEditable) return;
         if (selectedEntity != null) {
             PointF p = new PointF(e.getX(), e.getY());
             if (selectedEntity.pointInLayerRect(p)) {
@@ -385,6 +393,25 @@ public class MotionView  extends FrameLayout {
         public boolean onSingleTapUp(MotionEvent e) {
             updateSelectionOnTap(e);
             return false;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (motionViewCallback == null) return false;
+            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                // Swipe to left
+                motionViewCallback.onSwipeLeft();
+            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                // Swipe to right
+                motionViewCallback.onSwipeRight();
+            } else if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                // Swipe to top
+                motionViewCallback.onSwipeUp();
+            } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                // Swipe to bottom
+                motionViewCallback.onSwipeDown();
+            }
+            return true;
         }
     }
 

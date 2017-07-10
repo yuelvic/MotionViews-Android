@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -135,7 +136,7 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
         textLayer.setScale(1f);
 
         if (BuildConfig.DEBUG) {
-            textLayer.setText("Overlay");
+            textLayer.setText("");
         }
 
         return textLayer;
@@ -174,6 +175,10 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
             this.textEntity.getLayer().setScale(savedScale);
             this.textEntity.getLayer().setRotationInDegrees(savedRotation);
 //            motionView.restoreEntities(entities);
+            if (!this.textEntity.getLayer().getText().matches(".*\\w.*")) {
+                motionView.deletedSelectedEntity();
+                motionView.invalidate();
+            }
             this.textEntity = null;
         }
     }
@@ -224,6 +229,26 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
             editTextEntity((TextEntity) entity);
             ivAdd.setVisibility(View.GONE);
         }
+
+        @Override
+        public void onSwipeLeft() {
+            Log.d("Swipe", "Left");
+        }
+
+        @Override
+        public void onSwipeRight() {
+            Log.d("Swipe", "Right");
+        }
+
+        @Override
+        public void onSwipeUp() {
+            Log.d("Swipe", "Up");
+        }
+
+        @Override
+        public void onSwipeDown() {
+            Log.d("Swipe", "Down");
+        }
     };
 
     @Override
@@ -268,5 +293,12 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
             textEntity.updateEntity();
             motionView.invalidate();
         }
+    }
+
+    @Override
+    public void onEditorDismiss() {
+        Log.d("Editor", "dismiss called");
+        restoreEntity();
+        motionView.setBackgroundColor(Color.TRANSPARENT);
     }
 }

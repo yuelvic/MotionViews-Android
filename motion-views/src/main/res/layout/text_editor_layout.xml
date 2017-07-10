@@ -21,21 +21,25 @@
         android:textSize="1sp"
         tools:ignore="SmallSp"/>
 
-    <ImageView
-        android:id="@+id/iv_border"
+    <TextView
+        android:id="@+id/tv_done"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
-        android:padding="@dimen/icon_padding"
-        android:layout_centerHorizontal="true"
-        android:tint="@android:color/white"
-        android:src="@drawable/ic_border"/>
+        android:layout_marginStart="@dimen/icon_padding"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/small_padding"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:text="DONE" />
 
     <ImageView
         android:id="@+id/iv_color"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
         android:padding="@dimen/icon_padding"
-        android:layout_alignParentEnd="true"
+        android:layout_toStartOf="@id/tv_done"
         android:tint="@android:color/white"
         android:src="@drawable/ic_color"/>
 
@@ -56,6 +60,15 @@
         android:layout_toStartOf="@id/iv_font_inc"
         android:tint="@android:color/white"
         android:src="@drawable/ic_font_dec"/>
+
+    <ImageView
+        android:id="@+id/iv_border"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:layout_toStartOf="@id/iv_font_dec"
+        android:padding="@dimen/medium_padding"
+        android:tint="@android:color/white"
+        android:src="@drawable/ic_border"/>
 
 </RelativeLayout>
 

@@ -44,6 +44,26 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
         public void onEntityDoubleTap(@NonNull MotionEntity entity) {
             startTextEntityEditing();
         }
+
+        @Override
+        public void onSwipeLeft() {
+
+        }
+
+        @Override
+        public void onSwipeRight() {
+
+        }
+
+        @Override
+        public void onSwipeUp() {
+
+        }
+
+        @Override
+        public void onSwipeDown() {
+
+        }
     };
     private FontProvider fontProvider;
 
@@ -268,6 +288,11 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
 
     @Override
     public void textColorChanged(int color) {
+
+    }
+
+    @Override
+    public void onEditorDismiss() {
 
     }
 }

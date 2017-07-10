@@ -198,6 +198,7 @@ public class TextEntity extends MotionEntity {
     public void release() {
         if (bitmap != null && !bitmap.isRecycled()) {
             bitmap.recycle();
+            bitmap = null;
         }
     }
 }

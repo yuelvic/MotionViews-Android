@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
@@ -41,6 +42,7 @@ public class TextEditorDialogFragment extends DialogFragment {
     public static final String ARG_COLOR = "editor_color_arg";
 
     protected EditText editText;
+    protected TextView tvDone;
     protected ImageView ivBorder;
     protected ImageView ivColor;
     protected ImageView ivFontInc;
@@ -134,9 +136,6 @@ public class TextEditorDialogFragment extends DialogFragment {
         });
 
         editText = (EditText) view.findViewById(R.id.edit_text_view);
-
-        initWithTextEntity(text);
-
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -156,6 +155,14 @@ public class TextEditorDialogFragment extends DialogFragment {
             }
         });
 
+        tvDone = (TextView) view.findViewById(R.id.tv_done);
+        tvDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+
         view.findViewById(R.id.text_editor_root).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,6 +170,8 @@ public class TextEditorDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
+
+        initWithTextEntity(text);
     }
 
     private void initWithTextEntity(String text) {
@@ -183,6 +192,7 @@ public class TextEditorDialogFragment extends DialogFragment {
 
     @Override
     public void dismiss() {
+        callback.onEditorDismiss();
         super.dismiss();
 
         // clearing memory on exit, cos manipulating with text uses bitmaps extensively
@@ -259,5 +269,6 @@ public class TextEditorDialogFragment extends DialogFragment {
         void textChanged(@NonNull String text);
         void textSizeChanged(boolean increase);
         void textColorChanged(int color);
+        void onEditorDismiss();
     }
 }
