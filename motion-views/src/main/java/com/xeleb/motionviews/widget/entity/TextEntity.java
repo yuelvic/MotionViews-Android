@@ -138,7 +138,7 @@ public class TextEntity extends MotionEntity {
                     getLayer().getFont().getColor() == Color.WHITE
                     ? Color.parseColor("#ffb74d") : getLayer().getFont().getColor()
             );
-            canvas.drawRect(new Rect(0, 0, canvasWidth, canvasHeight), paint);
+            canvas.drawRect(new Rect(0, 0, getWidth(), getHeight()), paint);
             textPaint.setColor(Color.WHITE);
         }
 

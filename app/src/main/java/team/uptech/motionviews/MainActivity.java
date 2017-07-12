@@ -196,7 +196,8 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
 
         if (textEntity != null) {
             TextEditorDialogFragment fragment = TextEditorDialogFragment
-                    .getInstance(textEntity.getLayer().getText(), textEntity.getLayer().getFont().getColor());
+                    .getInstance(textEntity.getLayer().getText(), textEntity.getLayer().getFont().getColor(),
+                            textEntity.getLayer().getFont().getScaledSize(), textEntity.hasBorder());
             fragment.show(getSupportFragmentManager(), TextEditorDialogFragment.class.getName());
         }
     }
@@ -264,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
     }
 
     @Override
-    public void textBorderChanged() {
+    public void textBorderChanged(boolean hasBackground) {
 
     }
 
@@ -282,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements TextEditorDialogF
     }
 
     @Override
-    public void textSizeChanged(boolean increase) {
+    public void textSizeChanged(boolean increase, float textSize) {
 
     }
 

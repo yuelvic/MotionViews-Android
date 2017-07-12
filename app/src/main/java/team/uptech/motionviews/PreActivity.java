@@ -119,6 +119,7 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
         TextEntity textEntity = new TextEntity(
                 textLayer, motionView.getWidth(), motionView.getHeight(), fontProvider
         );
+        textEntity.setBorder(false);
         motionView.addEntityAndPosition(textEntity);
         motionView.invalidate();
         return textEntity;
@@ -131,6 +132,7 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
         font.setSize(TextLayer.Limits.INITIAL_FONT_SIZE);
         font.setColor(Color.WHITE);
         font.setTypeface(fontProvider.getDefaultFontName());
+        font.setScaledSize(24);
 
         textLayer.setFont(font);
         textLayer.setScale(1f);
@@ -152,7 +154,6 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
     }
 
     private void editTextEntity(TextEntity textEntity) {
-//        this.entities = motionView.getEntities();
         this.textEntity = textEntity;
         savedX = textEntity.absoluteCenterX();
         savedY = textEntity.absoluteCenterY();
@@ -161,9 +162,11 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
 
         centerText(textEntity);
         motionView.setBackgroundColor(ContextCompat.getColor(this, R.color.transparent_dark));
-//        motionView.hideNonSelectedEntities();
 
         showTextEditor();
+        textEntity.setBorder(false);
+        textEntity.getLayer().setText("");
+        textEntity.updateEntity();
     }
 
     private void restoreEntity() {
@@ -174,7 +177,6 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
             this.textEntity.moveCenterTo(center);
             this.textEntity.getLayer().setScale(savedScale);
             this.textEntity.getLayer().setRotationInDegrees(savedRotation);
-//            motionView.restoreEntities(entities);
             if (!this.textEntity.getLayer().getText().matches(".*\\w.*")) {
                 motionView.deletedSelectedEntity();
                 motionView.invalidate();
@@ -200,7 +202,8 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
 
     private void showTextEditor() {
         TextEditorDialogFragment fragment = TextEditorDialogFragment
-                .getInstance(textEntity.getLayer().getText(), textEntity.getLayer().getFont().getColor());
+                .getInstance(textEntity.getLayer().getText(), textEntity.getLayer().getFont().getColor(),
+                        textEntity.getLayer().getFont().getScaledSize(), textEntity.hasBorder());
         fragment.setCallback(this);
         fragment.show(getSupportFragmentManager(), TextEditorDialogFragment.class.getName());
 
@@ -210,11 +213,6 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
     MotionView.MotionViewCallback motionViewCallback = new MotionView.MotionViewCallback() {
         @Override
         public void onEntitySelected(@Nullable MotionEntity entity) {
-//            if (entity instanceof TextEntity) {
-//                Intent i = new Intent(Intent.ACTION_VIEW);
-//                i.setData(Uri.parse(((User) ((TextEntity) entity).getLayer().getOverlay()).getUrl()));
-//                startActivity(i);
-//            }
             ivAdd.setVisibility(entity == null ? View.VISIBLE : View.GONE);
             ivRemove.setVisibility(entity == null ? View.GONE : View.VISIBLE);
             if (entity == null) {
@@ -252,10 +250,10 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
     };
 
     @Override
-    public void textBorderChanged() {
+    public void textBorderChanged(boolean hasBorder) {
         TextEntity textEntity = currentTextEntity();
         if (textEntity != null) {
-            textEntity.setBorder(!textEntity.hasBorder());
+            textEntity.setBorder(hasBorder);
             textEntity.updateEntity();
             motionView.invalidate();
         }
@@ -275,11 +273,12 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
     }
 
     @Override
-    public void textSizeChanged(boolean increase) {
+    public void textSizeChanged(boolean increase, float textSize) {
         TextEntity textEntity = currentTextEntity();
         if (textEntity != null) {
             if (increase) textEntity.getLayer().getFont().increaseSize(TextLayer.Limits.FONT_SIZE_STEP);
             else textEntity.getLayer().getFont().decreaseSize(TextLayer.Limits.FONT_SIZE_STEP);
+            textEntity.getLayer().getFont().setScaledSize(textSize);
             textEntity.updateEntity();
             motionView.invalidate();
         }
@@ -297,7 +296,6 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
 
     @Override
     public void onEditorDismiss() {
-        Log.d("Editor", "dismiss called");
         restoreEntity();
         motionView.setBackgroundColor(Color.TRANSPARENT);
     }

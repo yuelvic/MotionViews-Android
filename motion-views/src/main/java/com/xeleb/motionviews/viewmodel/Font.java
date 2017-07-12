@@ -15,6 +15,11 @@ public class Font {
      */
     private float size;
 
+    /**
+     * android size
+     */
+    private float scaledSize;
+
     public Font() {
     }
 
@@ -50,6 +55,14 @@ public class Font {
 
     public void setSize(float size) {
         this.size = size;
+    }
+
+    public float getScaledSize() {
+        return scaledSize;
+    }
+
+    public void setScaledSize(float scaledSize) {
+        this.scaledSize = scaledSize;
     }
 
     private interface Limits {

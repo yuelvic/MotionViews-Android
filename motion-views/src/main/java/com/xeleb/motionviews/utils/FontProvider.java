@@ -30,7 +30,7 @@ public class FontProvider {
 
         // populate fonts
         fontNameToTypefaceFile = new HashMap<>();
-        fontNameToTypefaceFile.put("Gilroy", "Gilroy-Regular.otf");
+        fontNameToTypefaceFile.put("Gilroy", "Gilroy-Bold.otf");
 
         fontNames = new ArrayList<>(fontNameToTypefaceFile.keySet());
     }

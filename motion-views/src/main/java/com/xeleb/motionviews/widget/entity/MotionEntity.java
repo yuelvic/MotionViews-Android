@@ -211,7 +211,7 @@ public abstract class MotionEntity {
             if (drawingPaint != null) {
                 borderPaint.setAlpha(drawingPaint.getAlpha());
             }
-            drawSelectedBg(canvas);
+//            drawSelectedBg(canvas);
             // restore border alpha
             borderPaint.setAlpha(storedAlpha);
         }

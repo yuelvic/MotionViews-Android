@@ -10,7 +10,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.Selection;
+import android.text.Spannable;
 import android.text.TextWatcher;
+import android.text.style.BackgroundColorSpan;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +43,15 @@ import com.xeleb.motionviews.R;
 public class TextEditorDialogFragment extends DialogFragment {
 
     public static final String ARG_TEXT = "editor_text_arg";
+    public static final String ARG_SIZE = "editor_size_arg";
     public static final String ARG_COLOR = "editor_color_arg";
+    public static final String ARG_BG = "editor_bg_arg";
+
+    private static final int TEXT_MAX_SIZE = 120;
+    private static final int TEXT_MIN_SIZE = 8;
+
+    private float currentTextSize;
+    private boolean hasBackground;
 
     protected EditText editText;
     protected TextView tvDone;
@@ -52,19 +64,22 @@ public class TextEditorDialogFragment extends DialogFragment {
 
     /**
      * deprecated
-     * use {@link TextEditorDialogFragment#getInstance(String, int)}
+     * use {@link TextEditorDialogFragment#getInstance(String, int, float, boolean)}
      */
     @Deprecated
     public TextEditorDialogFragment() {
         // empty, use getInstance
     }
 
-    public static TextEditorDialogFragment getInstance(String textValue, int textColor) {
+    public static TextEditorDialogFragment getInstance(String textValue, int textColor,
+                                                       float textSize, boolean hasBackground) {
         @SuppressWarnings("deprecation")
         TextEditorDialogFragment fragment = new TextEditorDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TEXT, textValue);
         args.putInt(ARG_COLOR, textColor);
+        args.putFloat(ARG_SIZE, textSize);
+        args.putBoolean(ARG_BG, hasBackground);
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,16 +95,25 @@ public class TextEditorDialogFragment extends DialogFragment {
 
         final Bundle args = getArguments();
         String text;
+        float size;
+        final boolean[] hasBg = new boolean[1];
+        final int[] color = new int[1];
 
         if (args == null) return;
 
         text = args.getString(ARG_TEXT);
+        color[0] = args.getInt(ARG_COLOR);
+        size = args.getFloat(ARG_SIZE);
+        hasBg[0] = args.getBoolean(ARG_BG);
 
         ivBorder = (ImageView) view.findViewById(R.id.iv_border);
         ivBorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.textBorderChanged();
+                hasBg[0] = !hasBg[0];
+                editText.setBackgroundColor(hasBg[0] ? (color[0] == Color.WHITE ? Color.parseColor("#ffb74d") : color[0]) : Color.TRANSPARENT);
+                editText.setTextColor(hasBg[0] ? Color.WHITE : color[0]);
+//                callback.textBorderChanged();
             }
         });
 
@@ -97,7 +121,9 @@ public class TextEditorDialogFragment extends DialogFragment {
         ivFontInc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.textSizeChanged(true);
+                if (currentTextSize >= TEXT_MAX_SIZE) return;
+                editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, currentTextSize += TEXT_MIN_SIZE);
+                callback.textSizeChanged(true, currentTextSize);
             }
         });
 
@@ -105,7 +131,9 @@ public class TextEditorDialogFragment extends DialogFragment {
         ivFontDec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.textSizeChanged(false);
+                if (currentTextSize <= TEXT_MIN_SIZE) return;
+                editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, currentTextSize -= TEXT_MIN_SIZE);
+                callback.textSizeChanged(false, currentTextSize);
             }
         });
 
@@ -122,6 +150,9 @@ public class TextEditorDialogFragment extends DialogFragment {
                         .setPositiveButton("OK", new ColorPickerClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                                color[0] = selectedColor;
+                                editText.setBackgroundColor(hasBg[0] ? selectedColor : Color.TRANSPARENT);
+                                editText.setTextColor(hasBg[0] ? Color.WHITE : selectedColor);
                                 callback.textColorChanged(selectedColor);
                             }
                         })
@@ -136,6 +167,9 @@ public class TextEditorDialogFragment extends DialogFragment {
         });
 
         editText = (EditText) view.findViewById(R.id.edit_text_view);
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+        editText.setTextColor(hasBg[0] ? Color.WHITE : color[0]);
+        editText.setBackgroundColor(hasBg[0] ? (color[0] == Color.WHITE ? Color.parseColor("#ffb74d") : color[0]) : Color.TRANSPARENT);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -149,16 +183,18 @@ public class TextEditorDialogFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (callback != null) {
-                    callback.textChanged(s.toString());
-                }
+//                if (callback != null) {
+//                    callback.textChanged(s.toString());
+//                }
             }
         });
+        currentTextSize = size;
 
         tvDone = (TextView) view.findViewById(R.id.tv_done);
         tvDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hasBackground = hasBg[0];
                 dismiss();
             }
         });
@@ -167,6 +203,7 @@ public class TextEditorDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 // exit when clicking on background
+                hasBackground = hasBg[0];
                 dismiss();
             }
         });
@@ -192,6 +229,8 @@ public class TextEditorDialogFragment extends DialogFragment {
 
     @Override
     public void dismiss() {
+        callback.textChanged(editText.getText().toString());
+        callback.textBorderChanged(hasBackground);
         callback.onEditorDismiss();
         super.dismiss();
 
@@ -265,9 +304,9 @@ public class TextEditorDialogFragment extends DialogFragment {
      * {@link TextEditorDialogFragment.OnTextLayerCallback#textChanged(String)}
      */
     public interface OnTextLayerCallback {
-        void textBorderChanged();
+        void textBorderChanged(boolean hasBackground);
         void textChanged(@NonNull String text);
-        void textSizeChanged(boolean increase);
+        void textSizeChanged(boolean increase, float textSize);
         void textColorChanged(int color);
         void onEditorDismiss();
     }
