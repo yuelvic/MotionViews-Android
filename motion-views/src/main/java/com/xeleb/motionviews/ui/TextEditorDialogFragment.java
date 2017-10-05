@@ -10,10 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.Selection;
-import android.text.Spannable;
 import android.text.TextWatcher;
-import android.text.style.BackgroundColorSpan;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +25,14 @@ import android.widget.TextView;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
+import com.otaliastudios.autocomplete.Autocomplete;
+import com.otaliastudios.autocomplete.AutocompleteCallback;
+import com.otaliastudios.autocomplete.CharPolicy;
 import com.xeleb.motionviews.R;
+import com.xeleb.motionviews.viewmodel.MentionAdapter;
+import com.xeleb.motionviews.viewmodel.Mention;
+
+import java.util.List;
 
 /**
  * Transparent Dialog Fragment, with no title and no background
@@ -62,6 +66,11 @@ public class TextEditorDialogFragment extends DialogFragment {
 
     private OnTextLayerCallback callback;
 
+    private Autocomplete mention;
+    private MentionAdapter mentionAdapter;
+    private boolean hasMention = false;
+    private CharSequence mentionFilter = " ";
+
     /**
      * deprecated
      * use {@link TextEditorDialogFragment#getInstance(String, int, float, boolean)}
@@ -74,14 +83,14 @@ public class TextEditorDialogFragment extends DialogFragment {
     public static TextEditorDialogFragment getInstance(String textValue, int textColor,
                                                        float textSize, boolean hasBackground) {
         @SuppressWarnings("deprecation")
-        TextEditorDialogFragment fragment = new TextEditorDialogFragment();
+        TextEditorDialogFragment textEditorDialogFragment = new TextEditorDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TEXT, textValue);
         args.putInt(ARG_COLOR, textColor);
         args.putFloat(ARG_SIZE, textSize);
         args.putBoolean(ARG_BG, hasBackground);
-        fragment.setArguments(args);
-        return fragment;
+        textEditorDialogFragment.setArguments(args);
+        return textEditorDialogFragment;
     }
 
     @Override
@@ -208,6 +217,36 @@ public class TextEditorDialogFragment extends DialogFragment {
             }
         });
 
+        AutocompleteCallback<Mention> mentionCallback = new AutocompleteCallback<Mention>() {
+            @Override
+            public boolean onPopupItemClicked(Editable editable, Mention profile) {
+                String s = editable.toString().replace(mentionFilter, "");
+                editable.clear();
+                editable.append(s).append(profile.getNickname()).append(' ');
+                return true;
+            }
+
+            @Override
+            public void onPopupVisibilityChanged(boolean b) {
+
+            }
+
+            @Override
+            public void getDataFromService(CharSequence charSequence) {
+                mentionFilter = charSequence;
+                mention.showPopup(charSequence);
+            }
+        };
+        mentionAdapter = new MentionAdapter(getActivity());
+        mention = Autocomplete.<Mention>on(editText)
+                .with(6f)
+                .with(new ColorDrawable(Color.WHITE))
+                .with(mentionAdapter)
+                .with(mentionCallback)
+                .with(new CharPolicy('@'))
+                .viaService(true)
+                .build();
+
         initWithTextEntity(text);
     }
 
@@ -225,6 +264,10 @@ public class TextEditorDialogFragment extends DialogFragment {
 
     public void setCallback(OnTextLayerCallback callback) {
         this.callback = callback;
+    }
+
+    public EditText getEditText() {
+        return editText;
     }
 
     @Override
@@ -297,6 +340,11 @@ public class TextEditorDialogFragment extends DialogFragment {
         }
         editText.setFocusableInTouchMode(gainFocus);
         editText.setFocusable(gainFocus);
+    }
+
+    public void setMentionItems(List<Mention> mentions) {
+        mentionAdapter.setMentions(mentions);
+        if (!hasMention) hasMention = true;
     }
 
     /**

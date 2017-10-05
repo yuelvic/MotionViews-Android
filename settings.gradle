@@ -1,1 +1,1 @@
-include ':app', ':motion-views'
+include ':app', ':motion-views', ':autocomplete'

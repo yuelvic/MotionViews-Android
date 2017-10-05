@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import team.uptech.motionviews.models.User;
+import team.uptech.motionviews.utils.Provider;
 
 /**
  * Created by Emmanuel Victor Garcia on 6/14/17.
@@ -201,11 +202,22 @@ public class PreActivity extends AppCompatActivity implements TextEditorDialogFr
     }
 
     private void showTextEditor() {
-        TextEditorDialogFragment fragment = TextEditorDialogFragment
+        final TextEditorDialogFragment fragment = TextEditorDialogFragment
                 .getInstance(textEntity.getLayer().getText(), textEntity.getLayer().getFont().getColor(),
                         textEntity.getLayer().getFont().getScaledSize(), textEntity.hasBorder());
         fragment.setCallback(this);
         fragment.show(getSupportFragmentManager(), TextEditorDialogFragment.class.getName());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                    fragment.setMentionItems(Provider.getProfiles());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
         ivRemove.setVisibility(View.GONE);
     }
